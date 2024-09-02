@@ -30,4 +30,9 @@ class Server:
         return self.__dataset
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
-            pass
+        assert type(page) is int and type(page_size) is int
+        assert page > 0 and page_size > 0
+        seth = self.dataset()
+        ind = list(index_range(page, page_size))
+
+        return seth[ind[0]: ind[1]]
