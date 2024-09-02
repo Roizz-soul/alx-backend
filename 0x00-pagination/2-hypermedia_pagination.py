@@ -44,13 +44,14 @@ class Server:
         """ Get hyper media """
         dataset = self.dataset()
         data = self.get_page(page, page_size)
+        total = math.ceil(len(dataset) / page_size)
         ret_dict = {
             'page_size': len(data),
             'page': page,
             'data': data,
-            'next_page': page + 1 if len(data) > 0 else None,
+            'next_page': page + 1 if page + 1 <= total else None,
             'prev_page': page - 1 if page > 1 else None,
-            'total_pages': math.ceil(len(dataset) / page_size)
+            'total_pages': total
         }
 
         return ret_dict
