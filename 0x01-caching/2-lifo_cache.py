@@ -14,14 +14,11 @@ class LIFOCache(BaseCaching):
         """ Adds to the dictionary """
         if key is not None and item is not None:
             self.cache_data[key] = item
-            if len(self.cache_data) == 4:
-                self.last = key
-            if len(self.cache_data) > BaseCaching.MAX_ITEMS and (
-                    self.last != ''
-                    ):
+
+            if len(self.cache_data) > BaseCaching.MAX_ITEMS:
                 print('DISCARD: {}'.format(self.last))
                 del self.cache_data[self.last]
-                self.last = key
+            self.last = key
 
     def get(self, key):
         """ Gets from the dictionary """
