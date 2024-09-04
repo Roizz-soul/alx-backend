@@ -8,34 +8,48 @@ class LFUCache(BaseCaching):
     def __init__(self):
         """ Initialization function """
         super().__init__()
-        self.access = {}
+        self.accessF = {}
+        self.accessR = {}
 
     def put(self, key, item):
         """ Adds to the dictionary """
         if key is not None and item is not None:
-            if key in self.cache_data.keys():
-                if self.access != {}:
-                    self.access[key] += 1
-
             self.cache_data[key] = item
             to_pop = ''
-            if len(self.cache_data) == 4:
-                for i in self.cache_data.keys():
-                    self.access[i] = 0
+            to_pip = ''
+            check = 0
+
             if len(self.cache_data) > BaseCaching.MAX_ITEMS:
-                to_pop = min(self.access, key=self.access.get)
-                print('DISCARD: {}'.format(to_pop))
-                del self.cache_data[to_pop]
-                if key in self.access.keys():
-                    self.access[key] += 1
+                to_pop = min(self.accessF, key=self.accessF.get)
+                for i in self.accessF.values():
+                    if i == to_pop:
+                        check += 1
+                if check > 1:
+                    to_pip = min(self.accessR, key=self.accessR.get)
+                    print('DISCARD: {}'.format(to_pip))
+                    del self.cache_data[to_pip]
+                    del self.access[to_pip]
                 else:
-                    del self.access[to_pop]
-                    self.access[key] = 1
+                    print('DISCARD: {}'.format(to_pop))
+                    del self.cache_data[to_pop]
+                    del self.accessF[to_pop]
+
+            if key in self.accessF.keys():
+                self.accessF[key] += 1
+            else:
+                self.accessF[key] = 0
+
+            for i in self.accessR.keys():
+                self.accessR[i] -= 1
+            self.accessR[key] = 0
 
     def get(self, key):
         """ Gets from the dictionary """
         if key is None or self.cache_data.get(key) is None:
             return None
-        if self.access != {}:
-            self.access[key] += 1
+        if self.accessF != {}:
+            self.accessF[key] += 1
+            for i in self.accessR.keys():
+                self.accessR[i] -= 1
+            self.accessR[key] = 0
         return self.cache_data.get(key)
