@@ -13,15 +13,12 @@ class MRUCache(BaseCaching):
     def put(self, key, item):
         """ Adds to the dictionary """
         if key is not None and item is not None:
-            if key in self.cache_data.keys():
-                self.mru = key
-
             self.cache_data[key] = item
 
             if len(self.cache_data) > BaseCaching.MAX_ITEMS:
                 print('DISCARD: {}'.format(self.mru))
                 del self.cache_data[self.mru]
-                self.mru = key
+            self.mru = key
 
     def get(self, key):
         """ Gets from the dictionary """
