@@ -15,23 +15,21 @@ class LRUCache(BaseCaching):
         if key is not None and item is not None:
             self.cache_data[key] = item
             to_pop = ''
-            if len(self.cache_data) == 4:
-                for i in self.cache_data.keys():
-                    self.access[i] = 0
+            for i in self.access.keys():
+                self.access[i] -= 1
+
+            self.access[key] = 0
+
             if len(self.cache_data) > BaseCaching.MAX_ITEMS:
                 to_pop = min(self.access, key=self.access.get)
                 print('DISCARD: {}'.format(to_pop))
                 del self.cache_data[to_pop]
-                if key in self.access.keys():
-                    self.access[key] += 1
-                else:
-                    del self.access[to_pop]
-                    self.access[key] = 1
+                del self.access[to_pop]
 
     def get(self, key):
         """ Gets from the dictionary """
         if key is None or self.cache_data.get(key) is None:
             return None
         if self.access != {}:
-            self.access[key] += 1
+            self.access[key] = 0
         return self.cache_data.get(key)

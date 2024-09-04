@@ -16,7 +16,6 @@ class LFUCache(BaseCaching):
             if key in self.cache_data.keys():
                 if self.access != {}:
                     self.access[key] += 1
-                    print('Put: {}'.format(self.access))
 
             self.cache_data[key] = item
             to_pop = ''
@@ -32,7 +31,6 @@ class LFUCache(BaseCaching):
                 else:
                     del self.access[to_pop]
                     self.access[key] = 1
-                print('Put: {}'.format(self.access))
 
     def get(self, key):
         """ Gets from the dictionary """
@@ -40,5 +38,4 @@ class LFUCache(BaseCaching):
             return None
         if self.access != {}:
             self.access[key] += 1
-            print('Get: {}'.format(self.access))
         return self.cache_data.get(key)
